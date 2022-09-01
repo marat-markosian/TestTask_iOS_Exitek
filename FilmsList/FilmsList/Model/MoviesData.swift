@@ -7,10 +7,15 @@
 
 import Foundation
 
-struct FilmModel: Equatable {
+struct FilmModel: Equatable, Hashable, Comparable {
+    static func < (lhs: FilmModel, rhs: FilmModel) -> Bool {
+        return lhs.num < rhs.num
+    }
+    
     
     let title: String
     let year: Int
+    let num: Int
     
 }
 
@@ -18,5 +23,5 @@ struct Storage {
     
     static var instance = Storage()
     
-    var films = [FilmModel]()
+    var films = Set<FilmModel>()
 }

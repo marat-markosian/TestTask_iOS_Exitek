@@ -95,7 +95,7 @@ class MoviesController: UIViewController {
     
     func checkFilms() -> Bool {
         let films = Storage.instance.films
-        let new = FilmModel(title: titleTxt.text!, year: Int(yearTxt.text!)!)
+        let new = FilmModel(title: titleTxt.text!, year: Int(yearTxt.text!)!, num: Storage.instance.films.count + 1)
         for film in films {
             if film == new {
                 return false
@@ -105,16 +105,17 @@ class MoviesController: UIViewController {
     }
     
     func loadNewFilm() {
+        let index = IndexPath(row: Storage.instance.films.count - 1, section: 0)
         filmsTable.beginUpdates()
-        filmsTable.reloadSections(NSIndexSet(index: 0) as IndexSet, with: .none)
+        filmsTable.insertRows(at: [index], with: .fade)
         filmsTable.endUpdates()
     }
     
     @objc private func addFilm() {
         if checkItems() {
             if checkFilms() {
-                let film = FilmModel(title: titleTxt.text!, year: Int(yearTxt.text!)!)
-                Storage.instance.films.append(film)
+                let film = FilmModel(title: titleTxt.text!, year: Int(yearTxt.text!)!, num: Storage.instance.films.count + 1)
+                Storage.instance.films.insert(film)
                 titleTxt.text = ""
                 yearTxt.text = ""
                 loadNewFilm()
@@ -134,7 +135,7 @@ extension MoviesController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let films = Storage.instance.films
+        let films = Array(Storage.instance.films.sorted())
         if let cell = tableView.dequeueReusableCell(withIdentifier: "Reuse") as? CustomCell {
             cell.setFilmInfo(to: "\(films[indexPath.row].title) \(films[indexPath.row].year)")
             return cell
