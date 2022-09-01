@@ -95,12 +95,19 @@ class MoviesController: UIViewController {
     
     func checkFilms() -> Bool {
         let films = Storage.instance.films
+        let new = FilmModel(title: titleTxt.text!, year: Int(yearTxt.text!)!)
         for film in films {
-            if film.title == titleTxt.text {
+            if film == new {
                 return false
             }
         }
         return true
+    }
+    
+    func loadNewFilm() {
+        filmsTable.beginUpdates()
+        filmsTable.reloadSections(NSIndexSet(index: 0) as IndexSet, with: .none)
+        filmsTable.endUpdates()
     }
     
     @objc private func addFilm() {
@@ -110,7 +117,7 @@ class MoviesController: UIViewController {
                 Storage.instance.films.append(film)
                 titleTxt.text = ""
                 yearTxt.text = ""
-                filmsTable.reloadData()
+                loadNewFilm()
             } else {
                 showError(descr: "There is almost this film")
             }

@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct FilmModel {
+struct FilmModel: Equatable {
     
     let title: String
     let year: Int
